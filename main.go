@@ -1,15 +1,25 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"net"
+	"os"
 )
 
 func main() {
-	r := gin.Default()
 
-	r.GET("/", func(c *gin.Context) {
-		c.String(200, "Hello, World!")
-	})
+	l, err := net.Listen("tcp", "127.0.0.1:4221")
+	if err != nil {
+		fmt.Println("Failed to bind to port 4221")
+		os.Exit(1)
+	}
 
-	r.Run(":4221") // Start the server on port 4221
+	conn, err := l.Accept()
+	if err != nil {
+		fmt.Println("Error accepting connection: ", err.Error())
+		os.Exit(1)
+	}
+
+	fmt.Println(conn)
+
 }
