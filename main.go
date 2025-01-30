@@ -21,17 +21,12 @@ var albums = []album{
 	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
 }
 
-// getAlbums responds with the list of all albums as JSON.
-func getAlbums(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, albums) //serialize the struct into JSON and add it to the response.
-}
-
 func main() {
 
-	router := gin.Default()          //Initialize a Gin router using Default.
-	router.GET("/albums", getAlbums) //Use the GET function to associate the GET HTTP method and /albums path with a handler function.
-
-	router.Run("127.0.0.1:8080") //Use the Run function to attach the router to an http.Server and start the server.
+	router := gin.Default()            //Initialize a Gin router using Default.
+	router.GET("/albums", getAlbums)   //Use the GET function to associate the GET HTTP method and /albums path with a handler function.
+	router.POST("/albums", postAlbums) //Associate the POST method at the /albums path with the postAlbums function.
+	router.Run("127.0.0.1:8080")       //Use the Run function to attach the router to an http.Server and start the server.
 
 	// l, err := net.Listen("tcp", "127.0.0.1:4221")
 	// if err != nil {
@@ -47,4 +42,24 @@ func main() {
 
 	// fmt.Println(conn)
 
+}
+
+// getAlbums responds with the list of all albums as JSON.
+func getAlbums(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, albums) //serialize the struct into JSON and add it to the response.
+}
+
+// postAlbums adds an album from JSON received in the request body.
+func postAlbums(c *gin.Context) {
+	var newAlbum album
+
+	// Call BindJSON to bind the received JSON to
+	// newAlbum.
+	if err := c.BindJSON(&newAlbum); err != nil { //Use Context.BindJSON to bind the request body to newAlbum.
+		return
+	}
+
+	// Add the new album to the slice.
+	albums = append(albums, newAlbum)            //Append the album struct initialized from the JSON to the albums slice.
+	c.IndentedJSON(http.StatusCreated, newAlbum) //Add a 201 status code to the response, along with JSON representing the album you added.
 }
