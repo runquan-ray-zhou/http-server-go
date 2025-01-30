@@ -1,10 +1,7 @@
 package main
 
 import (
-	"fmt"
-	"net"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,18 +28,23 @@ func getAlbums(c *gin.Context) {
 
 func main() {
 
-	l, err := net.Listen("tcp", "127.0.0.1:4221")
-	if err != nil {
-		fmt.Println("Failed to bind to port 4221")
-		os.Exit(1)
-	}
+	router := gin.Default()          //Initialize a Gin router using Default.
+	router.GET("/albums", getAlbums) //Use the GET function to associate the GET HTTP method and /albums path with a handler function.
 
-	conn, err := l.Accept()
-	if err != nil {
-		fmt.Println("Error accepting connection: ", err.Error())
-		os.Exit(1)
-	}
+	router.Run("127.0.0.1:8080") //Use the Run function to attach the router to an http.Server and start the server.
 
-	fmt.Println(conn)
+	// l, err := net.Listen("tcp", "127.0.0.1:4221")
+	// if err != nil {
+	// 	fmt.Println("Failed to bind to port 4221")
+	// 	os.Exit(1)
+	// }
+
+	// conn, err := l.Accept()
+	// if err != nil {
+	// 	fmt.Println("Error accepting connection: ", err.Error())
+	// 	os.Exit(1)
+	// }
+
+	// fmt.Println(conn)
 
 }
