@@ -6,6 +6,14 @@ import (
 	"os"
 )
 
+// album represents data about a record album.
+type album struct {
+	ID     string  `json:"id"`
+	Title  string  `json:"title"`
+	Artist string  `json:"artist"`
+	Price  float64 `json:"price"`
+}
+
 func main() {
 
 	l, err := net.Listen("tcp", "127.0.0.1:4221")
